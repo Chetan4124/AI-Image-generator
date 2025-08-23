@@ -56,7 +56,7 @@ const loginUser = async (req, res) => {
 // CREDITS
 const userCredits = async (req, res) => {
   try {
-    const userId = req.user.id; // ✅ take from req.user, not body
+    const userId = req.user.id;
 
     const User = await userModel.findById(userId);
 
