@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import BuyCredit from './pages/BuyCredit'
 import Home from './pages/Home'
 import Result from './pages/Result'
+import GenerateText from './pages/GenerateText'
 import {Routes,Route} from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Login from './components/Login'
-import { AppContext } from './context/appContext'
+import { AppContext } from './context/AppContext'
 
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -22,6 +23,7 @@ const App = () => {
     <Routes>
       <Route path='/'element={<Home/>}/>
       <Route path='/result'element={<Result/>}/>
+      <Route path='/generate-text' element={<GenerateText/>} />
       <Route path='/buy'element={<BuyCredit/>}/>
 
     </Routes>

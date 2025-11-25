@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
+
+import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
-import { AppContext } from '../context/appContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
@@ -20,7 +21,7 @@ const Login = () => {
            if(data.success){
 setToken(data.token)
 setUser(data.user)
-localStorage.getItem('token',data.token)
+localStorage.setItem('token',data.token)
 setShowLogin(false)
            }
            else{
@@ -32,7 +33,7 @@ setShowLogin(false)
            if(data.success){
 setToken(data.token)
 setUser(data.user)
-localStorage.getItem('token',data.token)
+localStorage.setItem('token',data.token)
 setShowLogin(false)
            }
            else{

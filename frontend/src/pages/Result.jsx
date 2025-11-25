@@ -1,19 +1,59 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { assets } from '../assets/assets'
 import {motion, scale} from "framer-motion"
+import { AppContext } from '../context/AppContext'
 const Result = () => {
 const [image, setImage]= useState(assets.sample_img_1)
 const [isImageLoaded ,setIsImageLoaded] =useState(false)
 const [loading,setLoading] =useState(true)
 const [input,setInput]= useState('')
+const [error,setError]= useState(null)
+const { backendUrl, token, setCredit, setShowLogin, user } = useContext(AppContext)
 const onSubmitHandler = async (e )=>{
-
+  e.preventDefault()
+  setError(null)
+  if(!user){
+    setShowLogin(true)
+    return
+  }
+  if(!input || input.trim()===''){
+    setError('Please enter a prompt')
+    return
+  }
+  try{
+    setLoading(true)
+    // call backend to generate image
+    const res = await fetch(`${backendUrl}/api/image/generate-image`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+      },
+      body: JSON.stringify({ prompt: input })
+    })
+    const data = await res.json()
+    if(!data.success){
+      setError(data.message || 'Generation failed')
+      setLoading(false)
+      return
+    }
+    setImage(data.image)
+    setIsImageLoaded(true)
+    setLoading(false)
+    if(typeof setCredit === 'function' && data.creditBalance !== undefined){
+      setCredit(data.creditBalance)
+    }
+  }catch(err){
+    console.error(err)
+    setError('Network error or server issue')
+    setLoading(false)
+  }
 }
 
   return (
   <motion.form
  initial={{opacity:0.2 ,y:100}}
- transaction={{duration:1}}
+ transition={{duration:1}}
  whileInView={{opacity:1,y:0}}
  viewport={{once:true}}
 
@@ -27,6 +67,7 @@ const onSubmitHandler = async (e )=>{
         <span className={`absolute bottom-0 left-0 h-1 bg-blue-500${loading ?  'w-full transition-all duration-[10s]' :''}`}></span>
         <p className={!loading ? 'hidden':'w-0'}>Loading....</p>
       </div>
+      {error && <p className='text-red-600 mt-4'>{error}</p>}
       {!isImageLoaded &&
       <div className='flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full'>
         <input

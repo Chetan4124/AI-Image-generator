@@ -4,6 +4,7 @@ import 'dotenv/config'
 import connectDB from './config/mongodb.js'
 import userRouter from './routes/userRoutes.js'
 import imageRouter from './routes/imageroutes.js'
+import textRouter from './routes/textroutes.js'
 
 
 const PORT =process.env.PORT || 4000 
@@ -16,6 +17,7 @@ await connectDB()
 app.use('/api/user',userRouter)
 
 app.use('/api/image',imageRouter)
+app.use('/api/text', textRouter)
 
 app.get('/',(req,res)=>res.send('ApI working'))
 
